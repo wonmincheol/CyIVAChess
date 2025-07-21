@@ -1,4 +1,4 @@
-from UTILS.lib import os, pygame, chess
+from ..UTILS.lib import os, pygame, chess
 
 
 # Pygame 기본 설정

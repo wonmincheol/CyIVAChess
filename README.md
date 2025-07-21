@@ -28,3 +28,32 @@ pip install chess
 
 GUI를 구성하기 위한 라이브러리
 pip install pygame
+
+stockfish사용을 위한 라이브러리
+pip install stockfish
+
+
+
+
+# 전체 구조
+## 모델
+- model
+- - r1
+- - - AGENT
+- - - DATA
+- - - MODEL
+- - - NOTEBOOKS
+- - - TRAINER
+- - - UTILS
+- - - configs.yaml
+- - r2
+- - - same etc...
+- - r3
+## 클라이언트
+- client
+- - PIECES
+- - - chess pieces sprite
+- - UTILS
+- - - chess playing various funciton
+- - ENV
+- - - GUI, ... etc
