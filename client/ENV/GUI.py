@@ -77,6 +77,8 @@ def draw_board(screen, board):
         board : chess 보드
     """
     draw_score_bar(screen, board)
+    font = pygame.font.SysFont('Arial', 16)
+
     for rank in range(8):
         for file in range(8):
             square = chess.square(file, 7 - rank)
@@ -91,7 +93,13 @@ def draw_board(screen, board):
                 symbol = piece.symbol().lower()
                 image = PIECE_IMAGES[f"{color}{symbol}"]
                 screen.blit(image, (x, y))
-
+        # 왼쪽 숫자 좌표 (8~1)
+        label = font.render(str(8 - rank), True, (0, 0, 0))
+        screen.blit(label, (22, rank * SQ_SIZE + 5))
+    # 아래쪽 알파벳 좌표 (a~h)
+    for file in range(8):
+        label = font.render(chr(ord('a') + file), True, (0, 0, 0))
+        screen.blit(label, (file * SQ_SIZE + 25, HEIGHT - 20))  # x좌표는 +20 보정됨
 
 def get_square_under_mouse(pos):
     x, y = pos

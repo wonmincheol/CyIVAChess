@@ -39,11 +39,39 @@ def main():
     running = True
     clock = pygame.time.Clock()
 
+
+    control = False
+
+    moveList = []
+
     # 게임 실행
     while running:
+        for event in pygame.event.get():
+            if event.type == pygame.QUIT:
+                running = False
+
         draw_board(screen, board)
         pygame.display.flip()
-        clock.tick(30)
+        clock.tick(10)
+
+        if(board.turn == False or board.turn == True):
+            move = stockfish.get_best_move()
+            print(move)
+            moveList.append(str(move))
+            board.push(chess.Move.from_uci(move))
+            
+            stockfish.set_position(moveList)
+            
+            if (turnover(board)==0) or (turnover(board)==-1):
+                break
+
+            continue
+
+
+
+        if(control==False):
+            control=True
+            print(f"stockfish best move : {stockfish.get_best_move()}")
 
         for event in pygame.event.get(): # 이벤트가 발생했을때 
             if event.type == pygame.QUIT: # 종료 이벤트가 발생
@@ -61,22 +89,31 @@ def main():
                     move = chess.Move(selected_square, clicked_square) # 기물의 이동을 시도
                     if move in board.legal_moves: # 기물 이동이 정상적인 이동인가?
                         board.push(move) # 정상이라면 수행
+                        print(f"move type : {move}")
+                    
+                        print(f"now move : {move}") # 지금 이동 출력
+                        moveList.append(str(move)) # 이동을 기보리스트에 추가
+                        print(f"moveList : {moveList}") # 기보 목록 출력
+                        stockfish.set_position(moveList) # 기보 적용
+                        print(stockfish.get_board_visual()) # stockfish 현재 보드
+                        
+                        control = False # 반복 출력 제거
+
                     selected_square = None #초기화
+                    
         
         
         
-        # 게임 오버 체크
-        if board.is_checkmate():
-            print(f"{'BLACK' if board.turn else 'WHITE'} checkmate")
+        if (turnover(board)==0) or (turnover(board)==-1):
             break
-        if board.is_stalemate():
-            print(f"{'BLACK' if board.turn else 'WHITE'} stalemate")
-            break
-        if board.is_check():
-            print(f"{'BLACK' if board.turn else 'WHITE'} check")
             
 
-        
+    if turnover(board)==0:
+        print("무승부")
+    if turnover(board)==-1:
+        print(f"{board.turn} 우승")
+
+    os.system("pause")
     pygame.quit()
 
 if __name__ == "__main__":
