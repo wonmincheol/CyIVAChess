@@ -1,3 +1,7 @@
+from ..UTILS.lib import chess, math
+import chess
+import chess.engine
+
 def turnover(board):
     '''
     턴을 넘길때 마다 호출되는 함수
@@ -63,3 +67,35 @@ def check(board):
         print(f"{'BLACK' if board.turn else 'WHITE'} check")
         return False
     return False
+
+
+def normalize_score(score_cp, cap=1000):
+    '''
+    Stockfish centipawn 점수를 0 ~ 1 사이로 정규화합니다.
+    args:
+        score_cp : int, centipawn 점수 (양수: 백 우위, 음수: 흑 우위)
+        cap : int, 점수 제한을 위한 절댓값 최대값 (default=1000)
+    return:
+        float : 0.0 ~ 1.0 사이의 값 (0: 흑 우위, 1: 백 우위)
+    '''
+    score_cp = max(-cap, min(score_cp, cap))  # 점수 클리핑
+    return (score_cp + cap) / (2 * cap)
+
+
+def evaluate_position(stockfish_path, board):
+    '''
+    현재 체스 보드 상태를 stockfish로 평가해 점수를 반환
+    args:
+        stockfish_path : str, Stockfish 실행 파일 경로
+        board : chess.Board, 평가할 보드
+    return:
+        score : int or str, 평가 점수(+ : 백 우세, - : 흑 우새)
+    '''
+    with chess.engine.SimpleEngine.popen_uci(stockfish_path) as engine:
+        # 0.1초 또는 depth=12 정도의 평가
+        info = engine.analyse(board, chess.engine.Limit(depth=12))
+        score = info["score"]
+        if score.is_mate():
+            return f"Mate in {score.mate()}"
+        print(f"stockfish score : {score.white()}")
+        return score.white().score()

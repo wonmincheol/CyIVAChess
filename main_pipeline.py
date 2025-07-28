@@ -4,7 +4,9 @@ from client.UTILS.controller import *
 
 from stockfish import Stockfish
 
-stockfish=Stockfish("./Stockfish/stockfish-windows-x86-64-avx2.exe",
+stockfish_path = "./Stockfish/stockfish-windows-x86-64-avx2.exe"
+
+stockfish=Stockfish(stockfish_path,
                    parameters={
             #"Write Debug Log": "false",
             "Contempt": 0,
@@ -49,12 +51,12 @@ def main():
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
-
-        draw_board(screen, board)
+        
+        draw_board(screen, board,evaluate_position(stockfish_path,board))
         pygame.display.flip()
         clock.tick(10)
-
-        if(board.turn == False or board.turn == True):
+        # or board.turn == True
+        if(board.turn == False ):
             move = stockfish.get_best_move()
             print(move)
             moveList.append(str(move))

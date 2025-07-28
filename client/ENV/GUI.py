@@ -1,5 +1,4 @@
-from ..UTILS.lib import os, pygame, chess
-
+from client.UTILS.lib import os, pygame, chess
 
 # Pygame 기본 설정
 WIDTH, HEIGHT = 660, 640
@@ -52,13 +51,20 @@ def evaluate_material_ratio(board):
     total = white_score + black_score
     return (black_score / total, white_score / total) if total > 0 else (0.5, 0.5)
 
-def draw_score_bar(screen, board):
+def draw_score_bar(screen, board, stockfish_score):
     '''
     좌측에 흑(상단)/백(하단) 기물 점수 비율 막대 출력
+    args:
+        screen : pygame의 UI
+        board : 체스보드
+        stockfish_score : stockfish 평가 점수
     '''
     bar_x = 0
     bar_width = 20
-    black_ratio, white_ratio = evaluate_material_ratio(board)
+    # black_ratio, white_ratio = evaluate_material_ratio(board)
+    black_ratio = 1-stockfish_score
+    
+
     black_height = int(HEIGHT * black_ratio)
     white_height = HEIGHT - black_height
 
@@ -69,14 +75,15 @@ def draw_score_bar(screen, board):
 
 
 
-def draw_board(screen, board):
+def draw_board(screen, board, stockfish_score):
     """
     체스 보드를 출력
     args:
-        screen : pygame 스크린
-        board : chess 보드
+        \nscreen : pygame 스크린
+        \nboard : chess라이브러리의 board
+        \nstockfish_score : stockfish 평가 점수
     """
-    draw_score_bar(screen, board)
+    draw_score_bar(screen, board, stockfish_score)
     font = pygame.font.SysFont('Arial', 16)
 
     for rank in range(8):
