@@ -96,6 +96,10 @@ def evaluate_position(stockfish_path, board):
         info = engine.analyse(board, chess.engine.Limit(depth=12))
         score = info["score"]
         if score.is_mate():
-            return f"Mate in {score.mate()}"
-        print(f"stockfish score : {score.white()}")
-        return score.white().score()
+            print(f"mate : {str(score.white())[1:]}")
+            mateStep = int(str(score.white())[1:])
+            return 1000 if mateStep>0 else -1000
+            
+            # return f"Mate in {score.mate()}"
+        print(f"stockfish score : {score.white().score()}")
+        return (score.white().score())

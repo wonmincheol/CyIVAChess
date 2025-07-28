@@ -43,22 +43,34 @@ def main():
 
 
     control = False
-
+    draw_control = not (board.turn)
     moveList = []
 
     # 게임 실행
+    draw_board(screen, board,evaluate_position(stockfish_path,board))
     while running:
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 running = False
         
-        draw_board(screen, board,evaluate_position(stockfish_path,board))
+        
         pygame.display.flip()
         clock.tick(10)
+
+        # display draw
+        if draw_control != board.turn:
+            draw_board(screen, board,evaluate_position(stockfish_path,board))
+            draw_control = board.turn
+            # gameover check
+            if (turnover(board)==0) or (turnover(board)==-1):
+                draw_board(screen, board,evaluate_position(stockfish_path,board))
+                break
+
+        # stockfish auto movement
         # or board.turn == True
-        if(board.turn == False ):
+        if(board.turn == False or board.turn == True):
             move = stockfish.get_best_move()
-            print(move)
+            print(f"stockfish move : {move}")
             moveList.append(str(move))
             board.push(chess.Move.from_uci(move))
             
@@ -70,7 +82,7 @@ def main():
             continue
 
 
-
+        # manual movement
         if(control==False):
             control=True
             print(f"stockfish best move : {stockfish.get_best_move()}")
@@ -106,10 +118,9 @@ def main():
         
         
         
-        if (turnover(board)==0) or (turnover(board)==-1):
-            break
+        
             
-
+    # gameover discrimination
     if turnover(board)==0:
         print("무승부")
     if turnover(board)==-1:

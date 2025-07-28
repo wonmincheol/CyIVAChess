@@ -62,8 +62,18 @@ def draw_score_bar(screen, board, stockfish_score):
     bar_x = 0
     bar_width = 20
     # black_ratio, white_ratio = evaluate_material_ratio(board)
-    black_ratio = 1-stockfish_score
+    black_ratio = (1000-stockfish_score)/2000
     
+    '''
+    점수 계산을 어떻게 해야할까?
+    
+    입력 : stockfish점수(centipawn, -1000~+1000) or 메이트까지 남은 수
+
+    
+
+    출력 : -10~+10
+    
+    '''
 
     black_height = int(HEIGHT * black_ratio)
     white_height = HEIGHT - black_height
