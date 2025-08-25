@@ -6,6 +6,8 @@ from stockfish import Stockfish
 
 stockfish_path = "./Stockfish/stockfish-windows-x86-64-avx2.exe"
 
+
+# stockfish class define
 stockfish=Stockfish(stockfish_path,
                    parameters={
             #"Write Debug Log": "false",
@@ -31,12 +33,17 @@ stockfish.get_parameters()
 
 
 def main():
+    # pygame initialize
     pygame.init()
     screen = pygame.display.set_mode((WIDTH, HEIGHT))
-    pygame.display.set_caption("체스 GUI (기물 점수 막대 포함)")
+    pygame.display.set_caption("just chess")
+    
+    # chess class initialize
     board = chess.Board()
     load_piece_images("./client/PIECES")
 
+
+    #: 플레이어가 선택한 첫 블럭
     selected_square = None
     running = True
     clock = pygame.time.Clock()
@@ -46,7 +53,7 @@ def main():
     draw_control = not (board.turn)
     moveList = []
 
-    # 게임 실행
+    # game start
     draw_board(screen, board,evaluate_position(stockfish_path,board))
     while running:
         for event in pygame.event.get():
@@ -68,9 +75,9 @@ def main():
 
         # stockfish auto movement
         # or board.turn == True
-        if(board.turn == False or board.turn == True):
-            move = stockfish.get_best_move()
-            print(f"stockfish move : {move}")
+        if(board.turn == False):
+            move = stockfish.get_best_move() # stockfish's best move calculation
+            print(f"stockfish move : {move}")   # print stockfish's best move
             moveList.append(str(move))
             board.push(chess.Move.from_uci(move))
             
@@ -103,7 +110,6 @@ def main():
                     move = chess.Move(selected_square, clicked_square) # 기물의 이동을 시도
                     if move in board.legal_moves: # 기물 이동이 정상적인 이동인가?
                         board.push(move) # 정상이라면 수행
-                        print(f"move type : {move}")
                     
                         print(f"now move : {move}") # 지금 이동 출력
                         moveList.append(str(move)) # 이동을 기보리스트에 추가
@@ -111,6 +117,7 @@ def main():
                         stockfish.set_position(moveList) # 기보 적용
                         print(stockfish.get_board_visual()) # stockfish 현재 보드
                         
+
                         control = False # 반복 출력 제거
 
                     selected_square = None #초기화

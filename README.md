@@ -32,7 +32,10 @@ pip install pygame
 stockfish사용을 위한 라이브러리
 pip install stockfish
 
-
+# pgn read
+https://python-chess.readthedocs.io/en/latest/pgn.html
+# chess games
+https://www.chess.com/games
 
 
 # 전체 구조
