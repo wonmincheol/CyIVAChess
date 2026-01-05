@@ -87,7 +87,7 @@ def draw_score_bar(screen, board, stockfish_score):
 
 def draw_board(screen, board, stockfish_score):
     """
-    체스 보드를 출력
+    체스 보드를 출력\n
     args:
         \nscreen : pygame 스크린
         \nboard : chess라이브러리의 board

@@ -30,7 +30,18 @@ stockfish.set_skill_level(20)
 #stockfish.set_thread(8)
 stockfish.get_parameters()
 
+def stockfish_move(moveList, board):
+    '''
+    스톡피시의 수를 진행
+    '''
+    move = stockfish.get_best_move() # stockfish's best move calculation
+    print(f"stockfish move : {move}") # print stockfish's best move
+    moveList.append(str(move))
+    board.push(chess.Move.from_uci(move))
 
+    stockfish.set_position(moveList)
+    
+    pass
 
 def main():
     # pygame initialize
@@ -43,8 +54,8 @@ def main():
     load_piece_images("./client/PIECES")
 
 
-    #: 플레이어가 선택한 첫 블럭
-    selected_square = None
+    
+    selected_square = None # 
     running = True
     clock = pygame.time.Clock()
 
@@ -76,16 +87,9 @@ def main():
         # stockfish auto movement
         # or board.turn == True
         if(board.turn == False):
-            move = stockfish.get_best_move() # stockfish's best move calculation
-            print(f"stockfish move : {move}")   # print stockfish's best move
-            moveList.append(str(move))
-            board.push(chess.Move.from_uci(move))
-            
-            stockfish.set_position(moveList)
-            
+            stockfish_move(moveList, board)
             if (turnover(board)==0) or (turnover(board)==-1):
                 break
-
             continue
 
 
